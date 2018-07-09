@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxGame;
 import inputhelper.InputHelper;
+import mthree.MatchThreeState;
 import openfl.display.Sprite;
 
 class Main extends Sprite
@@ -13,6 +14,6 @@ class Main extends Sprite
 		
 		
 		super();
-		addChild(new FlxGame(0, 0, PlayState));
+		addChild(new FlxGame(0, 0, MatchThreeState));
 	}
 }
