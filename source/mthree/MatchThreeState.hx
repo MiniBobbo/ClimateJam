@@ -31,12 +31,15 @@ class MatchThreeState extends FlxState implements ISignal
 	var nextState:GS;
 	
 	//The waitcount tells the mainState if it should progress to the next state or not.  
-	var waitCount:Int;
+	var waitCount:Int = 0;
 	
 	override public function create():Void 
 	{
 		
 		super.create();
+		FlxG.watch.add(this, 'waitCount', 'WaitCount');
+		FlxG.watch.add(this, 'thisState', 'this state');
+		FlxG.watch.add(this, 'nextState', 'next state');
 		allSignals = [];
 		gems = new FlxTypedGroup<Gem>();
 		try{
@@ -44,7 +47,8 @@ class MatchThreeState extends FlxState implements ISignal
 			grid.fall();
 			
 			add(gems);
-			
+			nextState = GS.FALL;
+			thisState = GS.FALL;
 			//grid.findMatches();
 		} catch (err:Dynamic)
 		{
@@ -83,10 +87,56 @@ class MatchThreeState extends FlxState implements ISignal
 	override public function update(elapsed:Float):Void 
 	{
 		
-		
 		var i = InputHelper;
 		i.updateKeys();
 		super.update(elapsed);
+
+		switch (thisState) 
+		{
+			case GS.WAIT:
+				if (waitCount == 0)
+					thisState = nextState;
+			case GS.INPUT:
+				playerInput();
+			case GS.FALL:
+				if (grid.fall()) {
+					thisState = GS.WAIT;
+					nextState = GS.FALL;
+				} else {
+					thisState = GS.MATCH;
+				}
+			case GS.MATCH:
+				var madeMatch = findAndClearMatches();
+				if (!madeMatch) 
+					thisState = GS.INPUT;
+				else {
+					nextState = GS.FALL;
+					thisState = GS.WAIT;
+				}
+			default:
+				
+		}
+	}
+	
+	public function findAndClearMatches():Bool {
+		var matches = grid.findMatches();
+		if (matches.length == 0)
+			return false;
+		for (m in matches) {
+			try{
+				grid.removeGems(m.locs);
+				
+			} catch (err:Dynamic)
+			{
+				trace(err);
+			}
+		}
+		return true;
+	}
+	
+	function playerInput():Void 
+	{
+		var i = InputHelper;
 		if (i.isButtonJustPressed('match')) {
 			findAndClearMatches();
 		}
@@ -97,7 +147,7 @@ class MatchThreeState extends FlxState implements ISignal
 		
 		if (i.isButtonJustPressed('print')){
 			trace(grid.gridToString());
-
+	
 		}
 		
 		if (FlxG.mouse.justPressed) {
@@ -117,14 +167,8 @@ class MatchThreeState extends FlxState implements ISignal
 				if (g.overlapsPoint(FlxG.mouse.getPosition())) {
 					var selected2 = g.gridLoc;
 					grid.swapGems(selected, selected2);
+					waitForState(GS.MATCH);
 					selected = null;
-					var madeMatch = findAndClearMatches();
-					grid.fall();
-					while (madeMatch) {
-						madeMatch = findAndClearMatches();
-						grid.fall();
-					}
-					
 					break;
 				}
 			}
@@ -132,19 +176,9 @@ class MatchThreeState extends FlxState implements ISignal
 			selected = null;
 	}
 	
-	public function findAndClearMatches():Bool {
-		var matches = grid.findMatches();
-		if (matches.length == 0)
-			return false;
-		for (m in matches) {
-			try{
-				grid.removeGems(m.locs);
-				
-			} catch (err:Dynamic)
-			{
-				trace(err);
-			}
-		}
-		return true;
+	public function waitForState(state:GS) {
+		thisState = GS.WAIT;
+		nextState = state;
+		
 	}
 }

@@ -18,7 +18,8 @@ class R
 	public static var GEM_SPACE:Float = 40;
 	public static var GEM_SIZE:Int = 32;
 	
-	public static var GEM_MOVE_TIME:Float = .3;
+	public static var GEM_MOVE_TIME:Float = .2;
+	public static var GEM_CLEAR_TIME:Float = .3;
 	
 	
 }

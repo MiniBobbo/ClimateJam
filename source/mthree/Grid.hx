@@ -63,15 +63,15 @@ class Grid
 				//Skip anything that isn't empty.
 				if (getGemTypeFromLocation(x, y) == GemTypes.EMPTY) {
 					//If this space is empty, scroll up and try for the gem in the space above this one.
-					var fallingGem = getGemTypeFromLocation(x, y - 1);
+					var fallingGem = g[x][y - 1].getGem();
 					if (fallingGem != null) {
 						g[x][y].setGem(fallingGem);
 						foundOne = true;
 					}
-
 				}
 			}
 		}
+		return foundOne;
 	}
 	
 	/**

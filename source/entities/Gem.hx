@@ -88,14 +88,20 @@ class Gem extends FlxSprite implements ISignal
 		
 		//For now, just teleport the gem to the location.
 		//FlxTween.tween(this, {x: gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, y:gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y }, R.GEM_MOVE_TIME);
-		FlxTween.linearMotion(this, this.x, this.y, gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y, R.GEM_MOVE_TIME);
+		H.signalState('up');
+		FlxTween.linearMotion(this, this.x, this.y, gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y, R.GEM_MOVE_TIME, true, { onComplete:function(_) {
+			H.signalState('down');
+			
+			
+		}});
 		//x = gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X;
 		//y = gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y;
 		
 	}
 	
 	public function fade() {
-		FlxTween.tween(this, {alpha:0}, R.GEM_MOVE_TIME, {onComplete:function(_) { kill();}});
+		H.signalState('up');
+		FlxTween.tween(this, {alpha:0}, R.GEM_MOVE_TIME, {onComplete:function(_) { H.signalState('down'); kill(); }});
 		
 	}
 	
