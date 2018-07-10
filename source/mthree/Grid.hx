@@ -13,6 +13,10 @@ class Grid
 	
 	var g:Array<Array<GridLocation>>;
 	
+	var swap1:GridLocation;
+	var swap2:GridLocation;
+	
+	
 	//The match array is all the matches found since the last FindMatches call. 
 	//Be careful using this because you might have already changed the gems since the function was called!
 	var matches:Array<Match>;
@@ -161,9 +165,19 @@ class Grid
 	}
 	
 	public function swapGems(g1:GridLocation, g2:GridLocation) {
+		swap1 = g1;
+		swap2 = g2;
 		var gem = g1.getGem();
 		g1.setGem(g2.getGem());
 		g2.setGem(gem);
+	}
+	
+	public function revertSwap() {
+		if (swap1 == null || swap2 == null)
+			return;
+		swapGems(swap2, swap1);
+		swap2 = null;
+		swap1 = null;
 	}
 	
 }

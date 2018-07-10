@@ -12,6 +12,7 @@ enum GS {
 	WAIT;
 	MATCH;
 	INPUT;
+	CHECK;
 }
 
 /**
@@ -107,8 +108,19 @@ class MatchThreeState extends FlxState implements ISignal
 				}
 			case GS.MATCH:
 				var madeMatch = findAndClearMatches();
-				if (!madeMatch) 
-					thisState = GS.INPUT;
+				if (!madeMatch) {
+					waitForState(GS.INPUT);
+				}
+				else {
+					nextState = GS.FALL;
+					thisState = GS.WAIT;
+				}
+			case GS.CHECK:
+				var madeMatch = findAndClearMatches();
+				if (!madeMatch) {
+					waitForState(GS.INPUT);
+					grid.revertSwap();
+				}
 				else {
 					nextState = GS.FALL;
 					thisState = GS.WAIT;
@@ -167,7 +179,7 @@ class MatchThreeState extends FlxState implements ISignal
 				if (g.overlapsPoint(FlxG.mouse.getPosition())) {
 					var selected2 = g.gridLoc;
 					grid.swapGems(selected, selected2);
-					waitForState(GS.MATCH);
+					waitForState(GS.CHECK);
 					selected = null;
 					break;
 				}
