@@ -79,14 +79,16 @@ class Gem extends FlxSprite implements ISignal
 	}
 	
 	/**
-	 * Places a gem at a particular grid location.  Doesn't move the graphic.
+	 * Places a gem at a particular grid location.
 	 * @param	gridLoc
 	 */
 	public function placeGem(gridLoc:GridLocation) {
 		this.gridLoc = gridLoc;
 		
+		
 		//For now, just teleport the gem to the location.
-		FlxTween.tween(this, {x: gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, y:gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y }, R.GEM_MOVE_TIME);
+		//FlxTween.tween(this, {x: gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, y:gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y }, R.GEM_MOVE_TIME);
+		FlxTween.linearMotion(this, this.x, this.y, gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y, R.GEM_MOVE_TIME);
 		//x = gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X;
 		//y = gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y;
 		

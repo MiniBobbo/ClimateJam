@@ -41,10 +41,11 @@ class GeneratorGridLocation extends GridLocation
 	
 	private function generateRandomGem():Gem {
 		var g = H.getGem();
+		g.setPosition(loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y);
+		//g.setPosition(loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, loc.y - (R.GEM_SPACE * generateCount) + R.GRID_OFFSET_Y);
 		g.setGemType(generateRandomType());
 		g.alpha = 1;
 		generateCount++;
-		g.setPosition(loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, loc.y - (R.GEM_SPACE * generateCount) + R.GRID_OFFSET_Y);
 		return g;
 	}
 	

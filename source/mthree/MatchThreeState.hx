@@ -30,6 +30,8 @@ class MatchThreeState extends FlxState implements ISignal
 	var thisState:GS;
 	var nextState:GS;
 	
+	//The waitcount tells the mainState if it should progress to the next state or not.  
+	var waitCount:Int;
 	
 	override public function create():Void 
 	{
@@ -52,7 +54,15 @@ class MatchThreeState extends FlxState implements ISignal
 
 	public function receiveSignal(signal:String, ?data:Dynamic):Void 
 	{
-		
+		switch (signal) 
+		{
+			case 'up':
+				waitCount++;
+			case 'down':
+				waitCount--;
+			default:
+				
+		}
 	}
 	
 	/**

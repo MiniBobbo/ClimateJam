@@ -50,39 +50,26 @@ class Grid
 		return s;
 	}
 	
-	private function removeMatches() {
-		//TODO : Animation here?  I guess?
-		
-	}
 	
 	/**
 	 * Causes all the gems to fall down.  Start at the bottom of the level and work up.
 	 */
-	public function fall() {
+	public function fall():Bool {
+		var foundOne:Bool = false;
 		//Start at the bottom row and work our way up to the top.  
 		for (yy in 0...height) {
 			var y = height - yy - 1;
 			for (x in 0...width) {
 				//Skip anything that isn't empty.
 				if (getGemTypeFromLocation(x, y) == GemTypes.EMPTY) {
-					//If this space is empty, scroll up and look for the next space that has a gem
-					for (down in 1...y+1) {
-						var up = y - down;
-						//trace('Empty space at ' + x + ', ' + y + ': Checking ' + up);
-						var gem = g[x][up].getGem();
-						if (gem == null) continue;
-						g[x][y].setGem(gem);
-						break;
+					//If this space is empty, scroll up and try for the gem in the space above this one.
+					var fallingGem = getGemTypeFromLocation(x, y - 1);
+					if (fallingGem != null) {
+						g[x][y].setGem(fallingGem);
+						foundOne = true;
 					}
+
 				}
-			}
-		}
-		
-		//Set all the generators back to 0 count.
-		for (y in 0...height) {
-			for (x in 0...width) {
-				if (Std.is(g[x][y], GeneratorGridLocation))
-					cast(g[x][y], GeneratorGridLocation).resetGenerateCount();
 			}
 		}
 	}
@@ -99,12 +86,12 @@ class Grid
 				var match = checkHorizMatch(x, y);
 				if (match.length >= 3) {
 					matches.push(new Match(match, match.length));
-					trace('Found horiz match at ' + (x+1) + ', ' + y + ': ' + match);
+					//trace('Found horiz match at ' + (x+1) + ', ' + y + ': ' + match);
 				}
 				match = checkVertMatch(x, y);
 				if (match.length >= 3) {
 					matches.push(new Match(match, match.length));
-					trace('Found vert match at ' + (x+1) + ', ' + y + ': ' + match);
+					//trace('Found vert match at ' + (x+1) + ', ' + y + ': ' + match);
 				}
 			}
 		}
