@@ -54,5 +54,9 @@ class GridLocation
 		g.placeGem(this);
 	}
 	
+	public function removeGem() {
+		gem.fade();
+		gem = null;
+	}
 	
 }

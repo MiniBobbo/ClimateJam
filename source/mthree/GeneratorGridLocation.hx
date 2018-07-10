@@ -35,13 +35,16 @@ class GeneratorGridLocation extends GridLocation
 	override public function getGem(remove:Bool = true):Gem 
 	{
 		var g = generateRandomGem();
+		g.reset( -5, -5);
 		return g;
 	}
 	
 	private function generateRandomGem():Gem {
 		var g = H.getGem();
 		g.setGemType(generateRandomType());
+		g.alpha = 1;
 		generateCount++;
+		g.setPosition(loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, loc.y - (R.GEM_SPACE * generateCount) + R.GRID_OFFSET_Y);
 		return g;
 	}
 	

@@ -4,6 +4,7 @@ import entities.Gem.GemTypes;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import mthree.GridLocation;
 import mthree.Loc;
@@ -85,11 +86,16 @@ class Gem extends FlxSprite implements ISignal
 		this.gridLoc = gridLoc;
 		
 		//For now, just teleport the gem to the location.
-		x = gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X;
-		y = gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y;
+		FlxTween.tween(this, {x: gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X, y:gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y }, R.GEM_MOVE_TIME);
+		//x = gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X;
+		//y = gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y;
 		
 	}
 	
+	public function fade() {
+		FlxTween.tween(this, {alpha:0}, R.GEM_MOVE_TIME, {onComplete:function(_) { kill();}});
+		
+	}
 	
 	
 }

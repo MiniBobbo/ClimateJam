@@ -1,4 +1,5 @@
 package mthree;
+import entities.Gem;
 import entities.Gem.GemTypes;
 
 /**
@@ -12,11 +13,17 @@ class Grid
 	
 	var g:Array<Array<GridLocation>>;
 	
+	//The match array is all the matches found since the last FindMatches call. 
+	//Be careful using this because you might have already changed the gems since the function was called!
+	var matches:Array<Match>;
+	
 	public function new(w:Int, h:Int) 
 	{
 		width = w;
 		height = h;
 		g = [];
+		
+		matches = [];
 		
 		for (x in 0...w) {
 			g.push(new Array<GridLocation>());
@@ -43,6 +50,11 @@ class Grid
 		return s;
 	}
 	
+	private function removeMatches() {
+		//TODO : Animation here?  I guess?
+		
+	}
+	
 	/**
 	 * Causes all the gems to fall down.  Start at the bottom of the level and work up.
 	 */
@@ -65,25 +77,39 @@ class Grid
 				}
 			}
 		}
+		
+		//Set all the generators back to 0 count.
+		for (y in 0...height) {
+			for (x in 0...width) {
+				if (Std.is(g[x][y], GeneratorGridLocation))
+					cast(g[x][y], GeneratorGridLocation).resetGenerateCount();
+			}
+		}
 	}
 	
 	/**
 	 * Loops through the whole grid and finds matches.  This will place all the new gems in their locations.
 	 * After this is run, call the fall() function to fill in all the empty spaces.
 	 */
-	public function findMatches() {
+	public function findMatches():Array<Match> {
+		matches = [];
 		//Search for matches from the top left and move down and to the right.  
 		for (x in 0...width) {
 			for (y in 0...height) {
 				var match = checkHorizMatch(x, y);
-				if(match.length >= 3)
+				if (match.length >= 3) {
+					matches.push(new Match(match, match.length));
 					trace('Found horiz match at ' + (x+1) + ', ' + y + ': ' + match);
+				}
 				match = checkVertMatch(x, y);
-				if(match.length >= 3)
+				if (match.length >= 3) {
+					matches.push(new Match(match, match.length));
 					trace('Found vert match at ' + (x+1) + ', ' + y + ': ' + match);
-					
+				}
 			}
 		}
+		
+		return matches;
 	}
 	
 	private function getGemTypeFromLocation(x:Int, y:Int):GemTypes {
@@ -112,7 +138,7 @@ class Grid
 		}
 		//If we found any matches, add the first gem because the first gem is also part of this match.
 		if (matches.length > 0)
-			matches.push(new Loc(x,y));
+			matches.unshift(new Loc(x,y));
 		return matches;
 	}
 	/**
@@ -137,6 +163,20 @@ class Grid
 		if (matches.length > 0)
 			matches.push(new Loc(x,y));
 		return matches;
+	}
+	public function removeGems(locations:Array<Loc>) {
+		for(l in locations)
+			g[l.x][l.y].removeGem();
+	}
+	
+	public function removeGem(location:Loc) {
+		g[location.x][location.y].removeGem();
+	}
+	
+	public function swapGems(g1:GridLocation, g2:GridLocation) {
+		var gem = g1.getGem();
+		g1.setGem(g2.getGem());
+		g2.setGem(gem);
 	}
 	
 }
