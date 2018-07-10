@@ -2,6 +2,13 @@ package mthree;
 import entities.Gem;
 import entities.Gem.GemTypes;
 
+
+enum DIR {
+	UP;
+	DOWN;
+	LEFT;
+	RIGHT;
+}
 /**
  * ...
  * @author Dave
@@ -34,8 +41,7 @@ class Grid
 			for (y in 0...h) {
 				if (y == 0) {
 					g[x].push(new GeneratorGridLocation(x,y));
-				}
-				//trace(g[x].length + '');
+				} else 
 				g[x].push(new GridLocation(x,y));
 			}
 		}
@@ -165,6 +171,8 @@ class Grid
 	}
 	
 	public function swapGems(g1:GridLocation, g2:GridLocation) {
+		if (g1 == g2)
+			return;
 		swap1 = g1;
 		swap2 = g2;
 		var gem = g1.getGem();
@@ -178,6 +186,45 @@ class Grid
 		swapGems(swap2, swap1);
 		swap2 = null;
 		swap1 = null;
+	}
+	
+	/**
+	 * Finds a grid location from a specified location and direction.  If a direction is chosen that would
+	 * move off the board then the original location is returned.
+	 * @param	loc		The starting location
+	 * @param	dir		The direction of the search
+	 * @return			The new location.  
+	 */
+	public function findLocation(gl:GridLocation, dir:DIR):GridLocation {
+		var x = gl.loc.x;
+		var y = gl.loc.y;
+		trace('Location: ' + x + ', ' + y + '  Finding ' + dir);
+		switch (dir) 
+		{
+			case DIR.UP:
+				y--;
+				if (y < 0)
+				y = 0;
+			case DIR.DOWN:
+				y++;
+				if (y >= height)
+				y = height -1;
+			case DIR.LEFT:
+				x--;
+				if (x < 0)
+				x = 0;
+			case DIR.RIGHT:
+				x++;
+				if (x >= width)
+				x = width -1;
+				
+			default:
+				
+		}
+		trace('Location after move: ' + x + ', ' + y);
+		if (g[x][y].generator)
+			return gl;
+		return g[x][y];
 	}
 	
 }

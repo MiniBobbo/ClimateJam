@@ -4,8 +4,11 @@ import entities.Gem;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.addons.text.FlxTextField;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.text.FlxText;
 import inputhelper.InputHelper;
+import mthree.Grid.DIR;
 
 enum GS {
 	FALL;
@@ -27,6 +30,8 @@ class MatchThreeState extends FlxState implements ISignal
 	var gems:FlxTypedGroup<Gem>;
 	
 	var selected:GridLocation;
+	
+	var status:FlxText;
 	
 	var thisState:GS;
 	var nextState:GS;
@@ -55,6 +60,9 @@ class MatchThreeState extends FlxState implements ISignal
 		{
 			trace(err + '');
 		}
+		
+		status = new FlxText(500, 0, 200, '', 12);
+		add(status);
 	}
 
 	public function receiveSignal(signal:String, ?data:Dynamic):Void 
@@ -162,6 +170,15 @@ class MatchThreeState extends FlxState implements ISignal
 	
 		}
 		
+		if (FlxG.mouse.justPressedRight) {
+			for (g in gems) {
+				if (g.overlapsPoint(FlxG.mouse.getPosition())) {
+					status.text = 'Gem info:\n' + g.gridLoc;
+					break;
+				}
+			}
+		}
+		
 		if (FlxG.mouse.justPressed) {
 			//If we have just pressed the button, try to select something.
 			if (selected == null) {
@@ -175,15 +192,27 @@ class MatchThreeState extends FlxState implements ISignal
 		}
 		
 		if (FlxG.mouse.pressed && selected != null && !selected.getGem(false).overlapsPoint(FlxG.mouse.getPosition())) {
-			for (g in gems) {
-				if (g.overlapsPoint(FlxG.mouse.getPosition())) {
-					var selected2 = g.gridLoc;
-					grid.swapGems(selected, selected2);
-					waitForState(GS.CHECK);
-					selected = null;
-					break;
-				}
+			var angle = selected.getGem(false).getMidpoint().angleBetween(FlxG.mouse.getPosition());
+			var selected2:GridLocation;
+			trace('Mouse is at angle ' + angle);
+			if (angle >= 0) {
+				if (angle < 45)
+					selected2 = grid.findLocation(selected, DIR.UP);
+				else if (angle < 135)
+					selected2 = grid.findLocation(selected, DIR.RIGHT);
+				else
+					selected2 = grid.findLocation(selected, DIR.DOWN);
+			} else {
+				if (angle > -45)
+					selected2 = grid.findLocation(selected, DIR.UP);
+				else if (angle > -135)
+					selected2 = grid.findLocation(selected, DIR.LEFT);
+				else
+					selected2 = grid.findLocation(selected, DIR.DOWN);
 			}
+			grid.swapGems(selected, selected2);
+			waitForState(GS.CHECK);
+			selected = null;
 		} else if (!FlxG.mouse.pressed)
 			selected = null;
 	}

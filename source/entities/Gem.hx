@@ -45,6 +45,8 @@ class Gem extends FlxSprite implements ISignal
 	public function init(x:Int, y:Int, type:GemTypes) {
 		startLoc.x = x;
 		startLoc.y = y;
+		this.x = x * R.GEM_SPACE + R.GRID_OFFSET_X;
+		this.y = y * R.GEM_SPACE + R.GRID_OFFSET_Y;
 		setGemType(type);
 	}
 	

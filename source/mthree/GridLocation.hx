@@ -9,7 +9,7 @@ class GridLocation
 {
 	public var loc:Loc;
 	var gem:Gem;
-	var generator:Bool;
+	public var generator(default, null):Bool;
 	
 	
 	public function new(x:Int, y:Int) 
