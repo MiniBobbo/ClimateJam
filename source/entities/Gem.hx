@@ -101,7 +101,7 @@ class Gem extends FlxSprite implements ISignal
 	
 	public function fade() {
 		H.signalState('up');
-		FlxTween.tween(this, {alpha:0}, R.GEM_MOVE_TIME, {onComplete:function(_) { H.signalState('down'); kill(); }});
+		FlxTween.tween(this, {alpha:0}, R.GEM_CLEAR_TIME, {onComplete:function(_) { H.signalState('down'); kill(); }});
 		
 	}
 	
