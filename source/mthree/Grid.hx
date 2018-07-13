@@ -125,8 +125,8 @@ class Grid
 		var matches:Array<Loc> = [];
 		var leftGem = getGemTypeFromLocation(x - 1, y);
 		var thisGem = getGemTypeFromLocation(x, y);
-		//If left is the same as this gem or this gem is actually empty, return 0. 
-		if (thisGem == GemTypes.EMPTY || thisGem == GemTypes.GENERATE ||  leftGem == thisGem)
+		//If left is the same as this gem or this gem is actually empty, return 0. Also, brown gems never match.
+		if (thisGem == GemTypes.EMPTY || thisGem == GemTypes.GENERATE ||  leftGem == thisGem || thisGem == GemTypes.BROWN)
 			return matches;
 		var nextCheck = x + 1;
 		while (getGemTypeFromLocation(nextCheck, y) == thisGem) {
@@ -149,7 +149,7 @@ class Grid
 		var leftGem = getGemTypeFromLocation(x, y - 1);
 		var thisGem = getGemTypeFromLocation(x, y);
 		//If left is the same as this gem or this gem is actually empty, return 0. 
-		if (thisGem == GemTypes.EMPTY || thisGem == GemTypes.GENERATE ||  leftGem == thisGem)
+		if (thisGem == GemTypes.EMPTY || thisGem == GemTypes.GENERATE ||  leftGem == thisGem|| thisGem == GemTypes.BROWN)
 			return matches;
 		var nextCheck = y + 1;
 		while (getGemTypeFromLocation(x, nextCheck) == thisGem) {

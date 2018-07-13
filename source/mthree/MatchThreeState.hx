@@ -184,6 +184,10 @@ class MatchThreeState extends FlxState implements ISignal
 			if (selected == null) {
 				for (g in gems) {
 					if (g.overlapsPoint(FlxG.mouse.getPosition())) {
+						if (g.type == GemTypes.BROWN){
+							clickedCarbon(g);
+							break;
+						}
 						selected = g.gridLoc;
 						break;
 					}
@@ -220,6 +224,10 @@ class MatchThreeState extends FlxState implements ISignal
 	public function waitForState(state:GS) {
 		thisState = GS.WAIT;
 		nextState = state;
-		
+	}
+	
+	public function clickedCarbon(g:Gem) {
+		grid.removeGem(g.gridLoc.loc);
+		waitForState(GS.FALL);
 	}
 }

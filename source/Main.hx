@@ -1,5 +1,6 @@
 package;
 
+import building.BuildState;
 import flixel.FlxGame;
 import inputhelper.InputHelper;
 import mthree.MatchThreeState;
@@ -19,6 +20,6 @@ class Main extends Sprite
 		i.assignKeyToButton('SPACE', 'match');
 		
 		super();
-		addChild(new FlxGame(0, 0, MatchThreeState));
+		addChild(new FlxGame(0, 0, BuildState));
 	}
 }

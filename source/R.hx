@@ -1,5 +1,6 @@
 package;
 import entities.Gem.GemTypes;
+import flixel.FlxG;
 
 /**
  * ...
@@ -20,6 +21,14 @@ class R
 	
 	public static var GEM_MOVE_TIME:Float = .1;
 	public static var GEM_CLEAR_TIME:Float = .3;
+	public static var CARBON_CLEAR_TIME:Float = 1;
+	
+	
+	public static var TOOLBOX_WIDTH:Int = 400;
+	public static var TOOLBOX_HEIGHT:Int = 85;
+	public static var TOOLBOX_X:Float = 75;
+	public static var TOOLBOX_Y:Float = 455;
+	
 	
 	
 }

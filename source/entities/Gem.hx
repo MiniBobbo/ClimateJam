@@ -11,12 +11,16 @@ import mthree.Loc;
 
 enum GemTypes {
 	EMPTY;
-	RED;
-	BLUE;
-	GREEN;
-	YELLOW;
-	GENERATE;
-	BROWN;
+	WOOD;
+	CLAY;
+	ROCK;
+	WATER;
+	METAL;
+	PLASTIC_BOTTLE;
+	TRASH_BIN;
+	CHECMICALS;
+	TREE_STUMP;
+	ANIMAL_SKELETON;
 }
 
 /**
@@ -63,19 +67,19 @@ class Gem extends FlxSprite implements ISignal
 		
 		switch (type) 
 		{
-			case GemTypes.BLUE:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.BLUE);
-			case GemTypes.GREEN:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.GREEN);
-			case GemTypes.RED:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.RED);
-			case GemTypes.YELLOW:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.YELLOW);
-			case GemTypes.BROWN:
+			case GemTypes.WATER:
+				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.CYAN);
+			case GemTypes.CLAY:
 				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.BROWN);
+			case GemTypes.ROCK:
+				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.GRAY);
+			case GemTypes.WOOD:
+				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.ORANGE);
+			case GemTypes.METAL:
+				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.LIME);
 				
 			default:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.WHITE);
+				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.BROWN);
 				
 		}
 	}
@@ -103,7 +107,11 @@ class Gem extends FlxSprite implements ISignal
 	
 	public function fade() {
 		H.signalState('up');
-		FlxTween.tween(this, {alpha:0}, R.GEM_CLEAR_TIME, {onComplete:function(_) { H.signalState('down'); kill(); }});
+		var time = R.GEM_CLEAR_TIME;
+		if (type == GemTypes.BROWN)
+			time = R.CARBON_CLEAR_TIME;
+		
+		FlxTween.tween(this, {alpha:0}, time, {onComplete:function(_) { H.signalState('down'); kill(); }});
 		
 	}
 	
