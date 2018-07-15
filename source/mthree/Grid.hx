@@ -8,6 +8,7 @@ enum DIR {
 	DOWN;
 	LEFT;
 	RIGHT;
+	NONE;
 }
 /**
  * ...
@@ -109,7 +110,7 @@ class Grid
 		return matches;
 	}
 	
-	private function getGemTypeFromLocation(x:Int, y:Int):GemTypes {
+	public function getGemTypeFromLocation(x:Int, y:Int):GemTypes {
 		if (x < 0 || y < 0 || x >= width || y >= height)
 			return GemTypes.EMPTY;
 		return g[x][y].getGemType();
@@ -221,7 +222,7 @@ class Grid
 			default:
 				
 		}
-		trace('Location after move: ' + x + ', ' + y);
+		//trace('Location after move: ' + x + ', ' + y);
 		if (g[x][y].generator)
 			return gl;
 		return g[x][y];

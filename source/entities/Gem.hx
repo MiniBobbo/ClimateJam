@@ -16,6 +16,8 @@ enum GemTypes {
 	ROCK;
 	WATER;
 	METAL;
+	BROWN;
+	GENERATE;
 	PLASTIC_BOTTLE;
 	TRASH_BIN;
 	CHECMICALS;
@@ -44,6 +46,19 @@ class Gem extends FlxSprite implements ISignal
 		startLoc = new Loc();
 		startLoc.x = x;
 		startLoc.y = y;
+		frames = H.getFrames();
+		animation.addByPrefix('water', 'gems_water_', 1, false);
+		animation.addByPrefix('wood', 'gems_wood_', 1, false);
+		animation.addByPrefix('metal', 'gems_metal_', 1, false);
+		animation.addByPrefix('rock', 'gems_rock_', 1, false);
+		animation.addByPrefix('clay', 'gems_clay_', 1, false);
+		animation.addByPrefix('stump', 'gems_stump_', 1, false);
+		animation.addByPrefix('bottle', 'gems_bottle_', 1, false);
+		animation.addByPrefix('trash', 'gems_trash_', 1, false);
+		animation.addByPrefix('chemical', 'gems_chemical_', 1, false);
+		animation.play('water');
+		setSize(32, 32);
+		centerOffsets();
 	}
 	
 	public function init(x:Int, y:Int, type:GemTypes) {
@@ -68,15 +83,17 @@ class Gem extends FlxSprite implements ISignal
 		switch (type) 
 		{
 			case GemTypes.WATER:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.CYAN);
+				animation.play('water');
 			case GemTypes.CLAY:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.BROWN);
+				animation.play('clay');
 			case GemTypes.ROCK:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.GRAY);
+				animation.play('rock');
 			case GemTypes.WOOD:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.ORANGE);
+				animation.play('wood');
 			case GemTypes.METAL:
-				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.LIME);
+				animation.play('metal');
+			case GemTypes.BROWN:
+				randomBadThing();
 				
 			default:
 				makeGraphic(R.GEM_SIZE, R.GEM_SIZE, FlxColor.BROWN);
@@ -103,6 +120,11 @@ class Gem extends FlxSprite implements ISignal
 		//x = gridLoc.loc.x * R.GEM_SPACE + R.GRID_OFFSET_X;
 		//y = gridLoc.loc.y * R.GEM_SPACE + R.GRID_OFFSET_Y;
 		
+	}
+	
+	private function randomBadThing() {
+		var badstuff = ['trash', 'bottle', 'chemical', 'stump'];
+		animation.play(badstuff[FlxG.random.int(0, badstuff.length-1)]);
 	}
 	
 	public function fade() {

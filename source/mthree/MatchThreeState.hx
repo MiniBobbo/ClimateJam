@@ -3,12 +3,14 @@ package mthree;
 import entities.Gem;
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.text.FlxTextField;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import inputhelper.InputHelper;
 import mthree.Grid.DIR;
+import shared.ResourceManager;
 
 enum GS {
 	FALL;
@@ -27,11 +29,14 @@ class MatchThreeState extends FlxState implements ISignal
 	var allSignals:Array<ISignal>;
 	var grid:Grid;
 	
+	var bg:FlxSprite;
+	
 	var gems:FlxTypedGroup<Gem>;
 	
 	var selected:GridLocation;
 	
 	var status:FlxText;
+	
 	
 	var thisState:GS;
 	var nextState:GS;
@@ -47,7 +52,16 @@ class MatchThreeState extends FlxState implements ISignal
 		FlxG.watch.add(this, 'thisState', 'this state');
 		FlxG.watch.add(this, 'nextState', 'next state');
 		allSignals = [];
+		
+		
+		
 		gems = new FlxTypedGroup<Gem>();
+		bg = new FlxSprite();
+		bg.frames = H.getFrames();
+		bg.animation.addByNames('bg', ['bg']);
+		bg.animation.play('bg');
+		add(bg);
+		
 		try{
 			grid = new Grid(10, 11);
 			grid.fall();
@@ -61,8 +75,9 @@ class MatchThreeState extends FlxState implements ISignal
 			trace(err + '');
 		}
 		
-		status = new FlxText(500, 0, 200, '', 12);
+		status = new FlxText(R.STATUS_OFFSET_X, R.STATUS_OFFSET_Y, 200, 'Resources', 12);
 		add(status);
+		updateResourceCount();
 	}
 
 	public function receiveSignal(signal:String, ?data:Dynamic):Void 
@@ -144,6 +159,7 @@ class MatchThreeState extends FlxState implements ISignal
 			return false;
 		for (m in matches) {
 			try{
+				H.resources.addResources(grid.getGemTypeFromLocation(m.locs[0].x, m.locs[0].y), m.count);
 				grid.removeGems(m.locs);
 				
 			} catch (err:Dynamic)
@@ -151,6 +167,7 @@ class MatchThreeState extends FlxState implements ISignal
 				trace(err);
 			}
 		}
+		updateResourceCount();
 		return true;
 	}
 	
@@ -173,7 +190,7 @@ class MatchThreeState extends FlxState implements ISignal
 		if (FlxG.mouse.justPressedRight) {
 			for (g in gems) {
 				if (g.overlapsPoint(FlxG.mouse.getPosition())) {
-					status.text = 'Gem info:\n' + g.gridLoc;
+					status.text = 'Gem info:\n' + g.gridLoc.loc + ' : ' + g.type ;
 					break;
 				}
 			}
@@ -229,5 +246,17 @@ class MatchThreeState extends FlxState implements ISignal
 	public function clickedCarbon(g:Gem) {
 		grid.removeGem(g.gridLoc.loc);
 		waitForState(GS.FALL);
+	}
+	
+	private function updateResourceCount() {
+		//var to save typing...
+		var rm:ResourceManager = H.resources;
+		
+		var s = 'Resources\n\n';
+		for ( r in rm.resourceList.keys()) {
+			s += r + ' : ' + rm.resourceList.get(r) + '\n';
+		}
+		
+		status.text = s;
 	}
 }

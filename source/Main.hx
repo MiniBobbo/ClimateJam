@@ -19,7 +19,9 @@ class Main extends Sprite
 		i.assignKeyToButton('P', 'print');
 		i.assignKeyToButton('SPACE', 'match');
 		
+		H.newGame();
+		
 		super();
-		addChild(new FlxGame(0, 0, BuildState));
+		addChild(new FlxGame(0, 0, MatchThreeState));
 	}
 }

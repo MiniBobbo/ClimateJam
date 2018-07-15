@@ -50,6 +50,6 @@ class GeneratorGridLocation extends GridLocation
 	}
 	
 	private function generateRandomType():GemTypes {
-		return R.GEM_TYPES_ARRAY[FlxG.random.int(0,4)];
+		return R.GEM_TYPES_ARRAY[FlxG.random.int(0,R.GEM_TYPES_ARRAY.length - 1)];
 	}
 }
